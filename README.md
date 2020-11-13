@@ -12,6 +12,10 @@ Library with basic components to implement MVI + Flow. Usage sample could be fou
 - Glide https://github.com/bumptech/glide
 - Chuck Interceptor https://github.com/jgilfelt/chuck
 
+**Scheme**
+
+![MVI scheme](https://github.com/schect404/MviFlowCore/blob/main/scheme.png)
+
 **Base Components**
 
 - interface BaseViewIntent - intent from view to model
