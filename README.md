@@ -86,7 +86,7 @@ Could be used when at least anything from the above list is not needed
 
 ***Required properties***
 
-- abstract val actor: BaseActor<VI, SI, S, PC>
+- abstract val actor: BaseActor\<VI, SI, S, PC>
 - abstract val navigator: BaseNavigator
 - abstract val layoutRes: Int
 
@@ -97,7 +97,7 @@ Could be used when at least anything from the above list is not needed
 - open fun handleProgress(isProgressFlowing: Boolean)
 <br></br>
 > This function defines scope of intents registered to flow from view to model
-- open fun intents(): Flow<VI>?
+- open fun intents(): Flow\<VI>?
 <br></br>
 > This function defines behaviour of rendering the viewstate
 - open fun render(state: S) {}
