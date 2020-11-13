@@ -73,7 +73,7 @@ Could be used when at least anything from the above list is not needed
 > This function proceeds from PartialChange to SingleEvent(ModelIntent) if needed. If not, just return null
 - open fun PC.getSingleEvent(): SI?
 
-> This function maps error in flow from Throwable to String and emits it to Fragment's handleError(error: String) is using run functions
+> This function maps error in flow from Throwable to String and emits it to Fragment's handleError(error: String) is using run functions, you should make your own MyBaseActor and implement it there
 - protected open fun transformError(error: Throwable): String?
 
 ***Useful extensions***
