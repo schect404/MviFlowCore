@@ -1,0 +1,3 @@
+include ':MviFlowArch'
+include ':app'
+rootProject.name = "MviFlowArch"
