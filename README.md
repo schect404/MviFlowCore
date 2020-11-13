@@ -58,6 +58,7 @@ Could be used when at least anything from the above list is not needed
 - fun fun View.enable()
 - fun View.enableIf(predicate: () -> Boolean)
 - fun RecyclerView.attachAdapter(listAdapter: RecyclerView.Adapter<*>)
+- fun ImageView.image(url: String?, @DrawableRes placeholder: Int? = null, shouldGoneIfError: Boolean = false)
 
 **Functions to be overriden in Actor**
 
