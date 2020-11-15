@@ -5,7 +5,6 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.CheckBox
 import android.widget.EditText
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewpager2.widget.ViewPager2
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.cancel
@@ -14,13 +13,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicReference
-
-fun SwipeRefreshLayout.refreshes() = callbackFlow<Unit> {
-
-    setOnRefreshListener { offer(Unit) }
-    awaitClose { setOnRefreshListener(null) }
-
-}
 
 fun View.clicks(): Flow<View> {
     return callbackFlow {
