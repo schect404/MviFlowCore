@@ -1,6 +1,8 @@
 # MviFlowCore
 Library with basic components to implement MVI + Flow. Usage sample could be found in https://github.com/schect404/SampleFilters
 
+[![](https://jitpack.io/v/schect404/MviFlowCore.svg)](https://jitpack.io/#schect404/MviFlowCore)
+
 **Dependencies**
 
 - kotlinx-coroutines-core
