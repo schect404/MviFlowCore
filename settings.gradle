@@ -1,4 +1,4 @@
 include ':mviKmm'
-include ':MviFlowArch'
+include ':mviFlowArch'
 include ':app'
 rootProject.name = "MviFlowArch"
