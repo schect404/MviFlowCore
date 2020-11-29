@@ -2,6 +2,19 @@ plugins {
     id("com.android.library")
     kotlin("multiplatform")
     id("kotlin-android-extensions")
+    id("maven-publish")
+    id("publish.gradle")
+}
+
+group = "com.atitto.mvicore"
+version = "1.0"
+
+publishing {
+    repositories {
+        maven{
+            url = uri("$buildDir/repo")
+        }
+    }
 }
 
 repositories {
