@@ -113,8 +113,8 @@ artifactory {
     publish(delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.PublisherConfig> {
         repository(delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.DoubleDelegateWrapper> {
             setProperty("repoKey", "MviFlowCore")
-            setProperty("username", "itomil2000@gmail.com")
-            setProperty("password", "Itom+0704")
+            setProperty("username", "")
+            setProperty("password", "")
             setProperty("maven", true)
         })
         defaults(delegateClosureOf<groovy.lang.GroovyObject> {
