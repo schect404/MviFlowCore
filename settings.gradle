@@ -2,3 +2,4 @@ include ':mviKmm'
 include ':mviFlowArch'
 include ':app'
 rootProject.name = "MviFlowArch"
+enableFeaturePreview("GRADLE_METADATA")

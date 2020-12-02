@@ -3,19 +3,13 @@ plugins {
     kotlin("multiplatform")
     id("kotlin-android-extensions")
     id("maven-publish")
-    id("publish.gradle")
+    id("com.jfrog.artifactory") version "4.13.0"
+    id("org.jetbrains.dokka") version "0.10.0"
+
 }
 
-group = "com.atitto.mvicore"
-version = "1.0"
-
-publishing {
-    repositories {
-        maven{
-            url = uri("$buildDir/repo")
-        }
-    }
-}
+group = "com.atitto.MviFlowCore"
+version = "0.1"
 
 repositories {
     gradlePluginPortal()
@@ -26,7 +20,23 @@ repositories {
         url = uri("https://dl.bintray.com/kotlin/kotlin-eap")
     }
 }
+
 kotlin {
+
+    targets {
+        android()
+        iosArm64 {
+            binaries {
+                framework("MultiPlatformLibrary")
+            }
+        }
+        iosX64 {
+            binaries {
+                framework("MultiPlatformLibrary")
+            }
+        }
+    }
+
     android()
 
     sourceSets["commonMain"].dependencies {
@@ -47,7 +57,74 @@ kotlin {
         api("androidx.appcompat:appcompat:1.2.0")
     }
 
+    sourceSets {
+        val iosX64Main by sourceSets.getting
+        val iosArm64Main by sourceSets.getting
+        val iosMain by sourceSets.creating {
+            dependsOn(sourceSets["commonMain"])
+            iosX64Main.dependsOn(this)
+            iosArm64Main.dependsOn(this)
+        }
+    }
+
+    android {
+        publishAllLibraryVariants()
+    }
+    iosX64("iosX64") {
+        mavenPublication {
+            artifactId = "${project.name}-iosx64"
+        }
+    }
+    iosArm64 {
+        compilations["main"].defaultSourceSet {
+            dependsOn(sourceSets["iosMain"])
+        }
+
+        compilations.remove(compilations["test"])
+    }
+
+    targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget> {
+        binaries.framework(listOf(RELEASE))
+    }
+
 }
+
+tasks.named<org.jetbrains.dokka.gradle.DokkaTask>("dokka") {
+    multiplatform {
+        create("kotlinMultiplatform") {
+            targets = listOf("Android", "iOS")
+            skipEmptyPackages = true
+        }
+        create("android") {
+            targets = listOf("Android")
+            platform = "jvm"
+            skipEmptyPackages = true
+        }
+        create("ios") {
+            targets = listOf("iOS")
+            platform = "native"
+            skipEmptyPackages = true
+        }
+    }
+}
+
+artifactory {
+    setContextUrl("https://atitto.jfrog.io/artifactory/")
+    publish(delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.PublisherConfig> {
+        repository(delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.DoubleDelegateWrapper> {
+            setProperty("repoKey", "MviFlowCore")
+            setProperty("username", "itomil2000@gmail.com")
+            setProperty("password", "Itom+0704")
+            setProperty("maven", true)
+        })
+        defaults(delegateClosureOf<groovy.lang.GroovyObject> {
+            invokeMethod("publications", arrayOf(
+                "androidDebug", "androidRelease", "ios", "iosArm64", "iosX64", "kotlinMultiplatform", "metadata", "kmm", "native", "multiplatform"
+            ))
+        })
+    })
+}
+
 android {
     compileSdkVersion(30)
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
