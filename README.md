@@ -1,7 +1,40 @@
 # MviFlowCore
 Library with basic components to implement MVI + Flow. Usage sample could be found in https://github.com/schect404/SampleFilters
 
-[![](https://jitpack.io/v/schect404/MviFlowCore.svg)](https://jitpack.io/#schect404/MviFlowCore)
+**Right now the library can be used either for Android or Kotlin Multiplatform projects**
+
+##For getting Anroid variant (last version - 1.0.2.2)
+
+### build.gradle(project)
+
+```
+allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
+
+### build.gradle(in particular module) 
+
+```
+dependencies {
+	        implementation 'com.github.schect404:MviFlowCore:Tag'
+	}
+```
+
+##For getting Kotlin Multiplatform variant (last version - 0.1)
+
+```
+repositories {
+                maven("https://atitto.jfrog.io/artifactory/MviFlowCore")
+        }
+        
+sourceSets["commonMain"].dependencies {  
+                implemetation("com.atitto.MviFlowCore:mviKmm:Tag")    
+        }
+```
 
 **Dependencies**
 
