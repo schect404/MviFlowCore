@@ -3,7 +3,7 @@ Library with basic components to implement MVI + Flow. Usage sample could be fou
 
 **Right now the library can be used either for Android or Kotlin Multiplatform projects**
 
-##For getting Anroid variant (last version - 1.0.2.2)
+## For getting Anroid variant (last version - 1.0.2.2)
 
 ### build.gradle(project)
 
@@ -24,7 +24,7 @@ dependencies {
 	}
 ```
 
-##For getting Kotlin Multiplatform variant (last version - 0.1)
+## For getting Kotlin Multiplatform variant (last version - 0.1)
 
 ```
 repositories {
