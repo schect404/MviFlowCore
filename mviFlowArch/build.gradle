@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'maven-publish'
 
 group = 'com.schect404.mvi-core'
-version = '2.5'
+version = '2.6'
 
 android {
 
@@ -96,7 +96,6 @@ dependencies {
     api "androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-beta01"
 
     api 'xyz.peridy.shimmer:shimmerlayout:1.1'
-    api 'com.github.nitrico.lastadapter:lastadapter:2.3.0'
 
     api 'com.github.bumptech.glide:glide:4.9.0'
 
