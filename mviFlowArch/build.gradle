@@ -3,23 +3,9 @@ apply plugin: 'kotlin-android'
 apply plugin: 'maven-publish'
 
 group = 'com.schect404.mvi-core'
-version = '2.0'
+version = '2.1'
 
 android {
-
-//    publishing {
-//        publications {
-//            release(MavenPublication) {
-//                groupId = 'com.schect404.mvi-core'
-//                artifactId = 'core'
-//                version = '1.0'
-//
-//                afterEvaluate {
-//                    from components.release
-//                }
-//            }
-//        }
-//    }
 
     compileSdkVersion 33
     buildToolsVersion "30.0.3"
@@ -31,12 +17,12 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
-//
-//    publishing {
-//        singleVariant('release') {
-//            withSourcesJar()
-//        }
-//    }
+
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+        }
+    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
@@ -62,6 +48,22 @@ android {
     }
 
     dataBinding.enabled true
+}
+
+
+task androidSourcesJar(type: Jar) {
+    classifier 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+project.afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+            }
+        }
+    }
 }
 
 dependencies {

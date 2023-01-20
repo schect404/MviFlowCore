@@ -1,23 +1,16 @@
 plugins {
     id("com.android.library")
     kotlin("multiplatform")
-    id("maven-publish")
-    id("com.jfrog.artifactory") version "4.13.0"
     id("org.jetbrains.dokka") version "0.10.0"
 
 }
 
-group = "com.atitto.MviFlowCore"
-version = "0.1"
 
 repositories {
     gradlePluginPortal()
     google()
     jcenter()
     mavenCentral()
-    maven {
-        url = uri("https://dl.bintray.com/kotlin/kotlin-eap")
-    }
 }
 
 kotlin {
@@ -67,12 +60,7 @@ kotlin {
     }
 
     android {
-        publishAllLibraryVariants()
-    }
-    iosX64("iosX64") {
-        mavenPublication {
-            artifactId = "${project.name}-iosx64"
-        }
+
     }
     iosArm64 {
         compilations["main"].defaultSourceSet {
@@ -106,22 +94,22 @@ tasks.named<org.jetbrains.dokka.gradle.DokkaTask>("dokka") {
     }
 }
 
-artifactory {
-    setContextUrl("https://atitto.jfrog.io/artifactory/")
-    publish(delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.PublisherConfig> {
-        repository(delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.DoubleDelegateWrapper> {
-            setProperty("repoKey", "MviFlowCore")
-            setProperty("username", "")
-            setProperty("password", "")
-            setProperty("maven", true)
-        })
-        defaults(delegateClosureOf<groovy.lang.GroovyObject> {
-            invokeMethod("publications", arrayOf(
-                "androidDebug", "androidRelease", "ios", "iosArm64", "iosX64", "kotlinMultiplatform", "metadata", "kmm", "native", "multiplatform"
-            ))
-        })
-    })
-}
+//artifactory {
+//    setContextUrl("https://atitto.jfrog.io/artifactory/")
+////    publish(delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.PublisherConfig> {
+////        repository(delegateClosureOf<org.jfrog.gradle.plugin.artifactory.dsl.DoubleDelegateWrapper> {
+////            setProperty("repoKey", "MviFlowCore")
+////            setProperty("username", "")
+////            setProperty("password", "")
+////            setProperty("maven", true)
+////        })
+////        defaults(delegateClosureOf<groovy.lang.GroovyObject> {
+////            invokeMethod("publications", arrayOf(
+////                "androidDebug", "androidRelease", "ios", "iosArm64", "iosX64", "kotlinMultiplatform", "metadata", "kmm", "native", "multiplatform"
+////            ))
+////        })
+////    })
+//}
 
 android {
     compileSdkVersion(32)
