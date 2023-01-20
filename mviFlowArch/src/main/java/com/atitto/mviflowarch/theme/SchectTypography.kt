@@ -75,10 +75,6 @@ class SchectTypography(
         lineHeight = 20.sp,
     ),
 ) {
-
-    /**
-     * Returns a copy of this UnityTypography, optionally overriding some of the values.
-     */
     fun copy(
         h1: TextStyle = this.h1,
         h2: TextStyle = this.h2,

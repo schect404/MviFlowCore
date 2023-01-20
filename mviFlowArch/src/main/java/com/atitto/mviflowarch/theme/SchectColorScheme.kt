@@ -282,6 +282,6 @@ fun SchectColorScheme.contentColorFor(backgroundColor: Color): Color {
 
 @Composable
 fun contentColorFor(backgroundColor: Color): Color {
-    val color = UnityTheme.colorScheme.contentColorFor(backgroundColor)
+    val color = SchectTheme.colorScheme.contentColorFor(backgroundColor)
     return if (color.isSpecified) color else LocalContentColor.current
 }

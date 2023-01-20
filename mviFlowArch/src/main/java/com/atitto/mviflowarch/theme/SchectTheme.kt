@@ -6,9 +6,9 @@ import androidx.compose.runtime.CompositionLocalProvider
 
 @Composable
 fun SchectTheme(
-    colorScheme: SchectColorScheme = UnityTheme.colorScheme,
-    typography: SchectTypography = UnityTheme.typography,
-    shapes: SchectShapes = UnityTheme.shapes,
+    colorScheme: SchectColorScheme = SchectTheme.colorScheme,
+    typography: SchectTypography = SchectTheme.typography,
+    shapes: SchectShapes = SchectTheme.shapes,
     content: @Composable () -> Unit,
 ) {
 
@@ -24,7 +24,7 @@ fun SchectTheme(
 
 }
 
-object UnityTheme {
+object SchectTheme {
     val colorScheme: SchectColorScheme
         @Composable
         get() = LocalReplacementColors.current
