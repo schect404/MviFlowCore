@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'maven-publish'
 
 group = 'com.schect404.mvi-core'
-version = '2.3'
+version = '2.4'
 
 android {
 

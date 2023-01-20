@@ -7,7 +7,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-abstract class BaseActor<VI : BaseViewIntent, SI : BaseModelIntent, S : BaseViewState, PC : BasePartialChange<S>> :
+abstract class BaseActor<VI : BaseViewIntent, S : BaseViewState> :
     ViewModel() {
 
     val progressVisible: MutableStateFlow<Boolean> = MutableStateFlow(false)
