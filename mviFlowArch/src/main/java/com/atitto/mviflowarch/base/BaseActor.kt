@@ -5,52 +5,14 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 abstract class BaseActor<VI : BaseViewIntent, SI : BaseModelIntent, S : BaseViewState, PC : BasePartialChange<S>> :
     ViewModel() {
 
-    protected abstract val initialState: S
-
-    protected val eventChannel = BroadcastChannel<SI>(capacity = Channel.BUFFERED)
-    private val intentChannel = BroadcastChannel<VI>(capacity = Channel.CONFLATED)
-
-    private val intentFlow = intentChannel.asFlow()
-
     val progressVisible: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
-    suspend fun processIntent(intent: VI) {
-        intentChannel.send(intent)
-    }
-
-    val singleEvent: Flow<SI> = eventChannel.asFlow()
-
-    var viewState: MutableStateFlow<S>? = null
-        private set
-
     val errorFlow = MutableStateFlow<String?>(null)
-
-    open fun onCreate() {
-        viewState = MutableStateFlow(initialState)
-        intentFlow
-            .handleIntent()
-            .onEach { it.getSingleEvent()?.let { pushSingleEvent(it) } }
-            .scan(initialState) { vs, change -> change.reduceToState(vs) }
-            .onEach {
-                viewState?.value = it
-            }
-            .launchIn(viewModelScope)
-
-    }
-
-    protected suspend fun pushSingleEvent(event: SI) {
-        eventChannel.send(event)
-    }
-
-    //handle view intent and returning flow with partial change
-    open fun Flow<VI>.handleIntent(): Flow<PC> = flowOf()
-
-    //get single event if needed
-    open fun PC.getSingleEvent(): SI? = null
 
     protected fun <T> Flow<T>.runWithProgress(rethrowError: Boolean = false) =
         onStart {
@@ -59,15 +21,15 @@ abstract class BaseActor<VI : BaseViewIntent, SI : BaseModelIntent, S : BaseView
             progressVisible.value = false
         }.catch {
             progressVisible.value = false
-            if(rethrowError) throw it
-            else  {
+            if (rethrowError) throw it
+            else {
                 errorFlow.value = transformError(it)
             }
         }
 
     protected fun <T> Flow<T>.runWithoutProgress(rethrowError: Boolean = false) =
         catch {
-            if(rethrowError) throw it
+            if (rethrowError) throw it
             else {
                 errorFlow.value = transformError(it)
             }
@@ -78,4 +40,63 @@ abstract class BaseActor<VI : BaseViewIntent, SI : BaseModelIntent, S : BaseView
         return error.message
     }
 
+    private val initialState: S by lazy { createInitialState() }
+
+    private val viewIntentFlow = MutableSharedFlow<VI>()
+
+    private val _singleEventFlow = MutableSharedFlow<BaseModelIntent>()
+    val singleEventFlow: SharedFlow<BaseModelIntent> = _singleEventFlow
+
+    /**
+     * Current state of the view. This state is updated
+     * every time an event is produced in the ViewModel.
+     */
+    private val viewStateFlow = MutableStateFlow(initialState)
+    val state: StateFlow<S> = viewStateFlow
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = initialState
+        )
+
+    /**
+     * Returns the initial state of the view.
+     */
+    abstract fun createInitialState(): S
+
+    /**
+     * Handles the intent of type BaseViewIntent produced **from** the view.
+     * Each intent is mapped to a StateReducer to update the state of the view.
+     */
+    abstract fun Flow<VI>.handleIntent(): Flow<BasePartialChange<S>>
+
+    /**
+     * Process an intent of type BaseViewIntent. This intent
+     * will produce a change in the current state of the view.
+     */
+    fun processIntent(intent: VI) = viewModelScope.launch { viewIntentFlow.emit(intent) }
+
+    /**
+     * Dispatch an event of type BaseSingleEvent. This event
+     * will produce a change in the single event flow.
+     */
+    private fun dispatchSingleEvent(event: BaseModelIntent) =
+        viewModelScope.launch { _singleEventFlow.emit(event) }
+
+    protected open fun getSingleEventFromStateReducer(state: BasePartialChange<S>): BaseModelIntent? =
+        null
+
+    init {
+        viewIntentFlow
+            .conflate()
+            .handleIntent()
+            .onEach { getSingleEventFromStateReducer(it)?.let(::dispatchSingleEvent) }
+            .scan(initialState) { viewState, change -> change.reduceToState(viewState) }
+            .onEach { setState(it) }
+            .launchIn(viewModelScope)
+    }
+
+    private fun setState(state: S) {
+        viewStateFlow.value = state
+    }
 }

@@ -1,7 +1,6 @@
 plugins {
     id("com.android.library")
     kotlin("multiplatform")
-    id("kotlin-android-extensions")
     id("maven-publish")
     id("com.jfrog.artifactory") version "4.13.0"
     id("org.jetbrains.dokka") version "0.10.0"
@@ -80,7 +79,6 @@ kotlin {
             dependsOn(sourceSets["iosMain"])
         }
 
-        compilations.remove(compilations["test"])
     }
 
     targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget> {
@@ -126,14 +124,8 @@ artifactory {
 }
 
 android {
-    compileSdkVersion(30)
+    compileSdkVersion(32)
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-    defaultConfig {
-        minSdkVersion(23)
-        targetSdkVersion(30)
-        versionCode = 1
-        versionName = "1.0"
-    }
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false

@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicReference
 
 fun View.clicks(): Flow<View> {
     return callbackFlow {
-        setOnClickListener { offer(it) }
+        setOnClickListener { trySend(it) }
         awaitClose { setOnClickListener(null) }
     }
 }
@@ -24,7 +24,7 @@ fun View.clicks(): Flow<View> {
 fun CheckBox.checkChanges(): Flow<Boolean> {
     return callbackFlow {
         setOnCheckedChangeListener { buttonView, isChecked ->
-            if(buttonView.isPressed) offer(isChecked)
+            if(buttonView.isPressed) trySend(isChecked)
         }
         awaitClose { setOnCheckedChangeListener(null) }
     }
@@ -36,7 +36,7 @@ fun EditText.textChanges(): Flow<String> {
             override fun afterTextChanged(s: Editable?) = Unit
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if(hasFocus()) offer(s?.toString() ?: "")
+                if(hasFocus()) trySend(s?.toString() ?: "")
             }
         }
         addTextChangedListener(listener)
@@ -49,7 +49,7 @@ fun ViewPager2.pageChanges(): Flow<Int> {
         val listener = object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                offer(position)
+                trySend(position)
             }
         }
         registerOnPageChangeCallback(listener)
